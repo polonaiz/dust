@@ -6,7 +6,7 @@ struct MyState {
 fn main() -> Result<(), wasmtime::Error> {
 
     let engine = wasmtime::Engine::default();
-    let module = wasmtime::Module::from_file(&engine, "/workspaces/dust/src/hello.wat")?;
+    let module = wasmtime::Module::from_file(&engine, "./module/hello.wat")?;
     let mut store = wasmtime::Store::new(
         &engine,
         MyState {
