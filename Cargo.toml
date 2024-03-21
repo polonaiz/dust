@@ -1,2 +1,2 @@
 [workspace]
-members = ["runner"]
+members = ["wat-runner", "wasi-runner", "wasi-bin"]

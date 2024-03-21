@@ -6,7 +6,7 @@ struct MyState {
 fn main() -> Result<(), wasmtime::Error> {
 
     let engine = wasmtime::Engine::default();
-    let module = wasmtime::Module::from_file(&engine, "./module/hello.wat")?;
+
     let mut store = wasmtime::Store::new(
         &engine,
         MyState {
@@ -21,8 +21,9 @@ fn main() -> Result<(), wasmtime::Error> {
             caller.data_mut().count += 1;
             println!("> {}", caller.data().count);
         });
-
     let imports = [hello_func.into()];
+
+    let module = wasmtime::Module::from_file(&engine, "./module-wat/hello.wat")?;
     let instance = wasmtime::Instance::new(&mut store, &module, &imports).unwrap();
 
     let run = instance.get_typed_func::<(), ()>(&mut store, "run").unwrap();
