@@ -23,6 +23,7 @@ fn main() -> Result<(), wasmtime::Error> {
 
     //
     println!("create module");
+    println!("curr_dir: {:?}", std::env::current_dir());
     let module =
         wasmtime::Module::from_file(&engine, "./target/wasm32-wasi/release/wasi-bin.wasm")?;
 

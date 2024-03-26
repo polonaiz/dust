@@ -1,2 +1,8 @@
 [workspace]
-members = ["wat-runner", "wasi-runner", "wasi-bin"]
+members = [
+    "wat-runner",
+    "wasi-bin",
+    "wasi-bin-host",
+    "wasi-module",
+    "wasi-module-host",
+]

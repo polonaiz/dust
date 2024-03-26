@@ -1,5 +1,5 @@
 [package]
-name = "wasi-runner"
+name = "wasi-module-host"
 version = "0.1.0"
 edition = "2021"
 authors = ["polonaiz <polonaiz@gmail.com>"]

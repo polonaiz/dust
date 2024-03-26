@@ -1336,6 +1336,14 @@ name = "wasi-bin"
 version = "0.1.0"
 
 [[package]]
+name = "wasi-bin-host"
+version = "0.1.0"
+dependencies = [
+ "wasi-common",
+ "wasmtime 19.0.0",
+]
+
+[[package]]
 name = "wasi-common"
 version = "19.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1362,7 +1370,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "wasi-runner"
+name = "wasi-module"
+version = "0.1.0"
+
+[[package]]
+name = "wasi-module-host"
 version = "0.1.0"
 dependencies = [
  "wasi-common",
