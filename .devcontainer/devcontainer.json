@@ -15,7 +15,8 @@
                 "mhutchie.git-graph",
                 "rust-lang.rust-analyzer",
                 "vadimcn.vscode-lldb",
-                "tamasfe.even-better-toml"
+                "tamasfe.even-better-toml",
+                "bytecodealliance.wit-idl",
             ]
         }
     }

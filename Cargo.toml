@@ -5,4 +5,7 @@ members = [
     "wasi-bin-host",
     "wasi-module",
     "wasi-module-host",
+    "wit/guest",
+    "wit/host",
 ]
+resolver = "2"

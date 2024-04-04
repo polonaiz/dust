@@ -1,0 +1,5 @@
+package example:lib;
+
+world lib {
+  export to-upper: func(input: string) -> string;
+}
