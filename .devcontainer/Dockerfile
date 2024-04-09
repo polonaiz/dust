@@ -7,6 +7,6 @@ RUN apt-get update && \
     dpkg-reconfigure --frontend noninteractive tzdata
 
 RUN apt-get update && \
-    apt-get install -y bash-completion build-essential cmake
+    apt-get install -y bash-completion vim
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
