@@ -3,8 +3,9 @@ name = "wit-guest"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
-wit-bindgen = "0.24.0"
-
 [lib]
 crate-type = ['cdylib']
+
+[dependencies]
+wit-bindgen = "0.24.0"
+tokio = { version = "1.37.0", features = ["sync", "macros", "io-util", "rt"] }

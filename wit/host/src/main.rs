@@ -34,6 +34,7 @@ impl wasmtime_wasi::preview2::WasiView for Context {
 fn main() -> Result<(), wasmtime::Error> {
     let component_bytes =
         std::fs::read("/workspaces/dust/target/wasm32-wasi/debug/wit_guest_component.wasm").unwrap();
+    println!("guest wasm size: {:?}", component_bytes.len());
 
     let engine = wasmtime::Engine::default();
     let mut linker = wasmtime::component::Linker::<Context>::new(&engine);
@@ -55,7 +56,7 @@ fn main() -> Result<(), wasmtime::Error> {
 
     let mut results = [wasmtime::component::Val::String(Default::default())];
     instance
-        .get_func(&mut store, "to-upper")
+        .get_func(&mut store, "run")
         .unwrap()
         .call(
             &mut store,
