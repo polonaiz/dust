@@ -18,9 +18,15 @@ build-wit-guest:
 		./target/wasm32-wasi/debug/wit_guest.wasm \
 		-o ./target/wasm32-wasi/debug/wit_guest_component.wasm \
 		--adapt ./wasi_snapshot_preview1.reactor.wasm
+	gzip --keep --force ./target/wasm32-wasi/debug/wit_guest_component.wasm
+	ls -alh ./target/wasm32-wasi/debug/wit_guest_component.wasm*
+
+wepl-wit-guest: build-wit-guest
+	wepl ./target/wasm32-wasi/debug/wit_guest_component.wasm
 
 build-wit-host:
 	cargo build -p wit-host
 
 run-wit-host: build-wit
-	./target/debug/wit-host
+	RUST_BACKTRACE=full ./target/debug/wit-host
+

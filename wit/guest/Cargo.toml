@@ -3,9 +3,22 @@ name = "wit-guest"
 version = "0.1.0"
 edition = "2021"
 
+[package.metadata.component]
+package = "dust:guest"
+
 [lib]
 crate-type = ['cdylib']
 
 [dependencies]
 wit-bindgen = "0.24.0"
+lazy_static = "1.4.0"
 tokio = { version = "1.37.0", features = ["sync", "macros", "io-util", "rt"] }
+libp2p = { version = "0.53.2", features = [
+    "tokio",
+    # "tcp", # not supported wasm32 arch
+    # "quic", # not supported wasm32 arch
+    "gossipsub",
+    "noise",
+    "yamux",
+    "macros",
+] }

@@ -1,21 +1,33 @@
 wit_bindgen::generate!({
-    world: "lib",
+    world: "kernel",
     path: "../wit",
 });
 
-struct Lib;
+lazy_static::lazy_static! {
+    static ref TOKIO_RUNTIME: tokio::runtime::Runtime = tokio::runtime::Builder::new_current_thread().build().unwrap();
+}
 
-impl Guest for Lib {
-    fn run(_input: String) -> String {
+struct Kernel {}
 
-        // test execute async func on tokio current thread runtime
-        let runtime = tokio::runtime::Builder::new_current_thread()
-            .build()
-            .unwrap();
-        runtime.block_on( async { println!("print from async tokio from wasi") });
+impl Guest for Kernel {
+    fn bootstrap(_config: String) -> String {
+        lazy_static::initialize(&TOKIO_RUNTIME);
 
+        TOKIO_RUNTIME.spawn(async move { println!("async in bootstrap") });
+        "from_boot".to_string()
+    }
 
-        "from wasi".to_string()
+    fn poll(_input: String) -> String {
+        TOKIO_RUNTIME.spawn(async move { println!("async in poll") });
+
+        "from_tick".to_string()
+    }
+
+    fn cleanup(_input: String) -> String {
+        TOKIO_RUNTIME.spawn(async move { println!("async in cleanup") });
+
+        "from_shutdown".to_string()
     }
 }
-export!(Lib);
+
+export!(Kernel);
