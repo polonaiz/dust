@@ -1,11 +1,6 @@
 use wasmtime::component::ResourceTable;
 use wasmtime_wasi::preview2::WasiCtxBuilder;
 
-wasmtime::component::bindgen!({
-    world: "kernel",
-    path: "../wit",
-});
-
 struct WasmtimeContext {
     // table: wasmtime::runtime::component::ResourceTable,
     table: wasmtime::component::ResourceTable,
@@ -31,7 +26,6 @@ impl wasmtime_wasi::preview2::WasiView for WasmtimeContext {
     }
 }
 
-
 fn main() -> Result<(), wasmtime::Error> {
     let component_bytes =
         std::fs::read("/workspaces/dust/target/wasm32-wasi/debug/wit_guest_component.wasm")
@@ -49,6 +43,8 @@ fn main() -> Result<(), wasmtime::Error> {
             WasiCtxBuilder::new()
                 .inherit_stdout()
                 .inherit_stderr()
+                .inherit_network()
+                // .allow_tcp(true)
                 .build(),
         ),
     );
@@ -64,21 +60,27 @@ fn main() -> Result<(), wasmtime::Error> {
         func.post_return(&mut store)?;
         println!("bootstrap: {:?}", results);
     }
-    {
-        let func = instance.get_func(&mut store, "poll").unwrap();
-        let params = [wasmtime::component::Val::String("hello".into())];
-        let mut results = [wasmtime::component::Val::String(Default::default())];
-        func.call(&mut store, &params, &mut results).unwrap();
-        func.post_return(&mut store)?;
-        println!("tick: {:?}", results);
+
+    loop {
+        std::thread::sleep(std::time::Duration::from_millis(5000));
+
+        {
+            let func = instance.get_func(&mut store, "poll").unwrap();
+            let params = [wasmtime::component::Val::String("hello".into())];
+            let mut results = [wasmtime::component::Val::String(Default::default())];
+            func.call(&mut store, &params, &mut results).unwrap();
+            func.post_return(&mut store)?;
+            println!("tick: {:?}", results);
+        }
     }
-    {
-        let func = instance.get_func(&mut store, "cleanup").unwrap();
-        let params = [wasmtime::component::Val::String("hello".into())];
-        let mut results = [wasmtime::component::Val::String(Default::default())];
-        func.call(&mut store, &params, &mut results).unwrap();
-        func.post_return(&mut store)?;
-        println!("results: {results:?}");
-    }
-    Ok(())
+
+    // {
+    //     let func = instance.get_func(&mut store, "cleanup").unwrap();
+    //     let params = [wasmtime::component::Val::String("hello".into())];
+    //     let mut results = [wasmtime::component::Val::String(Default::default())];
+    //     func.call(&mut store, &params, &mut results).unwrap();
+    //     func.post_return(&mut store)?;
+    //     println!("results: {results:?}");
+    // }
+    // Ok(())
 }

@@ -1,0 +1,14 @@
+package dust:kernel;
+
+world particle {
+  import wasi:sockets/instance-network@0.2.0;
+  import wasi:sockets/network@0.2.0;
+  import wasi:sockets/tcp@0.2.0;
+  import wasi:sockets/tcp-create-socket@0.2.0;
+  import wasi:sockets/udp@0.2.0;
+  import wasi:sockets/udp-create-socket@0.2.0;
+
+  export bootstrap: func(input: string) -> string;
+  export poll: func(input: string) -> string;
+  export cleanup: func(input: string) -> string;
+}

@@ -1,7 +1,0 @@
-package dust:guest;
-
-world kernel {
-  export bootstrap: func(input: string) -> string;
-  export poll: func(input: string) -> string;
-  export cleanup: func(input: string) -> string;
-}
