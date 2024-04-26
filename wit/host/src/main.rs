@@ -44,7 +44,14 @@ fn main() -> Result<(), wasmtime::Error> {
                 .inherit_stdout()
                 .inherit_stderr()
                 .inherit_network()
-                // .allow_tcp(true)
+                .preopened_dir(
+                    wasmtime_wasi::sync::Dir::from_std_file(std::fs::File::open("/tmp").unwrap()),
+                    wasmtime_wasi::preview2::DirPerms::MUTATE
+                        | wasmtime_wasi::preview2::DirPerms::READ,
+                    wasmtime_wasi::preview2::FilePerms::WRITE
+                        | wasmtime_wasi::preview2::FilePerms::READ,
+                    "data",
+                )
                 .build(),
         ),
     );

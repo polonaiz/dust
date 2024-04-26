@@ -8,7 +8,13 @@
     },
     "postCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}  && sh ${containerWorkspaceFolder}/.devcontainer/postCreate.sh",
     "remoteUser": "root",
-    "mounts": [],
+    "mounts": [
+        {
+            "type": "bind",
+            "source": "/data/app/wasmtime",
+            "target": "/workspaces/wasmtime"
+        }
+    ],
     "customizations": {
         "vscode": {
             "extensions": [

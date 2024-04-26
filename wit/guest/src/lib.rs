@@ -8,6 +8,7 @@ use wasi::sockets::tcp_create_socket::create_tcp_socket;
 use wasi::sockets::udp::UdpSocket;
 use wasi::sockets::udp_create_socket::create_udp_socket;
 
+use crate::wasi::filesystem::types::OpenFlags;
 use crate::wasi::io::streams::StreamError;
 use crate::wasi::sockets::udp::OutgoingDatagram;
 
@@ -58,6 +59,48 @@ impl Guest for Particle {
             )
             .unwrap();
         UDP_BIND_SOCKET.finish_bind().unwrap();
+
+        //
+        let directories = wasi::filesystem::preopens::get_directories();
+        println!("get_directories: {:?}", directories);
+        for (directory, path) in directories {
+            println!("path: {:?}", path);
+            println!("descriptor_flags: {:?}", directory.get_flags().unwrap());
+            println!("descriptor_type: {:?}", directory.get_type().unwrap());
+            println!("descriptor_stat: {:?}", directory.stat().unwrap());
+
+            let directory_entry_stream = directory.read_directory().unwrap();
+            while let Some(directory_entry) = directory_entry_stream.read_directory_entry().unwrap()
+            {
+                println!("directory_entry.name: {:?}", directory_entry.name);
+                println!("directory_entry.type: {:?}", directory_entry.type_);
+            }
+
+            let file = directory
+                .open_at(
+                    wasi::filesystem::types::PathFlags::SYMLINK_FOLLOW,
+                    "test",
+                    wasi::filesystem::types::OpenFlags::CREATE
+                        | wasi::filesystem::types::OpenFlags::TRUNCATE,
+                    wasi::filesystem::types::DescriptorFlags::WRITE,
+                )
+                .unwrap();
+            let output_stream = file.write_via_stream(0).unwrap();
+            output_stream.write("contents".as_bytes()).unwrap();
+            output_stream.flush().unwrap();
+
+            let file = directory
+                .open_at(
+                    wasi::filesystem::types::PathFlags::SYMLINK_FOLLOW,
+                    "test",
+                    OpenFlags::EXCLUSIVE,
+                    wasi::filesystem::types::DescriptorFlags::READ,
+                )
+                .unwrap();
+            let input_stream = file.read_via_stream(0).unwrap();
+            let read_bytes = input_stream.read(4096).unwrap();
+            println!("read_bytes: {:?}", String::from_utf8(read_bytes).unwrap());
+        }
 
         "from_boot".to_string()
     }
