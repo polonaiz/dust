@@ -28,7 +28,7 @@ impl wasmtime_wasi::preview2::WasiView for WasmtimeContext {
 
 fn main() -> Result<(), wasmtime::Error> {
     let component_bytes =
-        std::fs::read("/workspaces/dust/target/wasm32-wasi/debug/wit_guest_component.wasm")
+        std::fs::read("./target/wasm32-wasi/debug/guest_component.wasm")
             .unwrap();
     println!("guest wasm size: {:?}", component_bytes.len());
 

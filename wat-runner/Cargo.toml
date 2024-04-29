@@ -1,8 +1,0 @@
-[package]
-name = "wat-runner"
-version = "0.1.0"
-edition = "2021"
-authors = ["polonaiz <polonaiz@gmail.com>"]
-
-[dependencies]
-wasmtime = "18.0.3"

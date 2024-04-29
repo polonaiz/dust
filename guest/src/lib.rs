@@ -7,13 +7,11 @@ use wasi::sockets::tcp::{InputStream, OutputStream, TcpSocket};
 use wasi::sockets::tcp_create_socket::create_tcp_socket;
 use wasi::sockets::udp::UdpSocket;
 use wasi::sockets::udp_create_socket::create_udp_socket;
-
-use crate::wasi::filesystem::types::OpenFlags;
-use crate::wasi::io::streams::StreamError;
-use crate::wasi::sockets::udp::OutgoingDatagram;
+use wasi::filesystem::types::OpenFlags;
+use wasi::io::streams::StreamError;
+use wasi::sockets::udp::OutgoingDatagram;
 
 wit_bindgen::generate!({
-    // world: "dust:kernel/particle",
     path: "../wit",
 });
 

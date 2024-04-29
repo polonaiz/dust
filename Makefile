@@ -1,32 +1,30 @@
-build:
-	cargo build
-	cargo build --package wasi-bin --target wasm32-unknown-unknown --release
-	cargo build --package wasi-bin --target wasm32-wasi --release
+env:
+	rustup target add wasm32-unknown-unknown
+	rustup target add wasm32-wasi
+	cargo install wasm-tools
 
-build-wasi-module:
-	cargo build --package wasi-module --target wasm32-wasi --release
-	ls -al ./target/wasm32-wasi/release/
+build: build-guest build-host
 
-invoke-wasi-module:
-	wasmtime --invoke say_hello ./target/wasm32-wasi/release/wasi_module.wasm 
-
-build-wit: build-wit-guest build-wit-host
-
-build-wit-guest:
-	cargo build -p wit-guest --target wasm32-wasi
+build-guest:
+	cargo build -p guest --target wasm32-wasi
 	wasm-tools component new \
-		./target/wasm32-wasi/debug/wit_guest.wasm \
-		-o ./target/wasm32-wasi/debug/wit_guest_component.wasm \
+		./target/wasm32-wasi/debug/guest.wasm \
+		-o ./target/wasm32-wasi/debug/guest_component.wasm \
 		--adapt ./wasi_snapshot_preview1.reactor.wasm
-	gzip --keep --force ./target/wasm32-wasi/debug/wit_guest_component.wasm
-	ls -alh ./target/wasm32-wasi/debug/wit_guest_component.wasm*
+	gzip --keep --force ./target/wasm32-wasi/debug/guest_component.wasm
+	ls -alh ./target/wasm32-wasi/debug/guest_component.wasm*
 
-wepl-wit-guest: build-wit-guest
-	wepl ./target/wasm32-wasi/debug/wit_guest_component.wasm
+wepl-install:
+	git clone https://github.com/rylev/wepl.git /workspaces/wepl
+	cd /workspaces/wepl && cargo install --path .
+	rm -rf /workspaces/wepl
 
-build-wit-host:
-	cargo build -p wit-host
+wepl-guest: build-guest
+	wepl ./target/wasm32-wasi/debug/guest_component.wasm
 
-run-wit-host: build-wit
-	RUST_BACKTRACE=full ./target/debug/wit-host
+build-host:
+	cargo build -p host
+
+run-host: build
+	RUST_BACKTRACE=full ./target/debug/host
 

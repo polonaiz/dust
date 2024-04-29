@@ -1,4 +1,4 @@
-package dust:kernel;
+package dust:base;
 
 world particle {
   import wasi:sockets/instance-network@0.2.0;

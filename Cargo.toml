@@ -1,11 +1,6 @@
 [workspace]
 members = [
-    "wat-runner",
-    "wasi-bin",
-    "wasi-bin-host",
-    "wasi-module",
-    "wasi-module-host",
-    "wit/guest",
-    "wit/host",
+    "guest",
+    "host",
 ]
 resolver = "2"
