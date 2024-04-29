@@ -32,7 +32,9 @@ fn main() -> Result<(), wasmtime::Error> {
             .unwrap();
     println!("guest wasm size: {:?}", component_bytes.len());
 
-    let engine = wasmtime::Engine::default();
+    let mut config = wasmtime::Config::new();
+    config.consume_fuel(true);
+    let engine = wasmtime::Engine::new(&config).unwrap();
     let mut linker = wasmtime::component::Linker::<WasmtimeContext>::new(&engine);
     wasmtime_wasi::preview2::command::sync::add_to_linker(&mut linker)?;
 
@@ -55,6 +57,7 @@ fn main() -> Result<(), wasmtime::Error> {
                 .build(),
         ),
     );
+    store.set_fuel(10_000_000).unwrap();
 
     let component = wasmtime::component::Component::new(&engine, &component_bytes)?;
     let instance = linker.instantiate(&mut store, &component)?;
@@ -79,6 +82,7 @@ fn main() -> Result<(), wasmtime::Error> {
             func.post_return(&mut store)?;
             println!("tick: {:?}", results);
         }
+        println!("fuel: {:?}", store.get_fuel().unwrap());
     }
 
     // {
